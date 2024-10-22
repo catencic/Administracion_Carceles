@@ -3,7 +3,7 @@ from controllers.IncidentesController import IncidentesController
 from controllers.InternoController import InternoController
 from controllers.Personal_CarcelController import Personal_CarcelController
 from controllers.MunicipioController import MunicipioController
-from controllers.PrisonController import PrisonController
+from controllers.PrisionController import PrisionController
 from controllers.Rol_PersonalController import Rol_PersonalController
 from controllers.SentenciaController import SentenciaController
 from controllers.VisitasController import VisitasController
@@ -29,7 +29,7 @@ def main():
 
     # Instanciar los controladores
     municipio_controller = MunicipioController()
-    prison_controller = PrisonController()
+    prison_controller = PrisionController()
     interno_controller = InternoController()
     personal_controller = Personal_CarcelController()
     rol_personal_controller = Rol_PersonalController()
