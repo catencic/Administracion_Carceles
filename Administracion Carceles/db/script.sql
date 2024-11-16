@@ -144,6 +144,98 @@ INSERT INTO Incident (description, incident_date, prison_id) VALUES
 ('Descubrimiento de drogas en una celda', '2023-07-25', 5); -- Incidente en la Cárcel de Rionegro
 
 
+-- PROCEDIMIENTOS ALMACENADOS   
+
+--1. Consultar los internos de una cárcel específica
+DELIMITER //
+CREATE PROCEDURE GetInmatesByPrison(IN prison_id INT)
+BEGIN
+    SELECT 
+        Inmate.id, 
+        CONCAT(Inmate.first_name, ' ', Inmate.last_name) AS full_name, 
+        Inmate.birth_date 
+    FROM Inmate
+    WHERE Inmate.prison_id = prison_id;
+END //
+DELIMITER ;
+
+
+--2. Consultar el personal de una cárcel con sus roles
+DELIMITER //
+CREATE PROCEDURE GetStaffByPrison(IN prison_id INT)
+BEGIN
+    SELECT 
+        Staff.id, 
+        CONCAT(Staff.first_name, ' ', Staff.last_name) AS full_name, 
+        StaffRole.role_name 
+    FROM Staff
+    JOIN StaffRole ON Staff.role_id = StaffRole.id
+    WHERE Staff.prison_id = prison_id;
+END //
+DELIMITER ;
+
+--3. Obtener el historial de visitas de un interno
+DELIMITER //
+CREATE PROCEDURE GetVisitsByInmate(IN inmate_id INT)
+BEGIN
+    SELECT 
+        Visitor.id, 
+        CONCAT(Visitor.first_name, ' ', Visitor.last_name) AS visitor_name, 
+        Visitor.visit_date 
+    FROM Visitor
+    WHERE Visitor.inmate_id = inmate_id;
+END //
+DELIMITER ;
+
+
+--4. Consultar las sentencias de todos los internos en una cárcel
+DELIMITER //
+CREATE PROCEDURE GetSentencesByPrison(IN prison_id INT)
+BEGIN
+    SELECT 
+        CONCAT(Inmate.first_name, ' ', Inmate.last_name) AS inmate_name, 
+        Crime.crime_description, 
+        Sentence.sentence_date, 
+        Sentence.release_date, 
+        Sentence.sentence_length 
+    FROM Sentence
+    JOIN Inmate ON Sentence.inmate_id = Inmate.id
+    JOIN Crime ON Sentence.crime_id = Crime.id
+    WHERE Inmate.prison_id = prison_id;
+END //
+DELIMITER ;
+
+
+--5. Incidentes registrados en una cárcel
+DELIMITER //
+CREATE PROCEDURE GetIncidentsByPrison(IN prison_id INT)
+BEGIN
+    SELECT 
+        Incident.id, 
+        Incident.description, 
+        Incident.incident_date 
+    FROM Incident
+    WHERE Incident.prison_id = prison_id;
+END //
+DELIMITER ;
+
+
+--6. Consultar la ocupación total por cárcel
+DELIMITER //
+CREATE PROCEDURE GetPrisonOccupancy()
+BEGIN
+    SELECT 
+        Prison.name AS prison_name, 
+        COUNT(Inmate.id) AS inmate_count 
+    FROM Prison
+    LEFT JOIN Inmate ON Prison.id = Inmate.prison_id
+    GROUP BY Prison.id, Prison.name;
+END //
+DELIMITER ;
+
+
+
+
 
 
 
