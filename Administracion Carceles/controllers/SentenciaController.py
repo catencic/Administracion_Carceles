@@ -40,6 +40,28 @@ class SentenciaController:
         sentencias = cursor.fetchall()
         for sentencia in sentencias:
             print(sentencia)
+            
+    def consultar_sentencias_por_carcel(self, conexion):
+        prison_id = input("Ingrese el ID de la cárcel: ")
+
+        try:
+            cursor = conexion.conexion.cursor()
+            # Llamar al procedimiento almacenado
+            cursor.callproc('GetSentencesByPrison', [prison_id])
+
+            # Obtener y mostrar los resultados
+            print("\n--- Sentencias de los Internos ---")
+            for result in cursor.stored_results():  # Obtener los resultados del procedimiento
+                filas = result.fetchall()  # Obtener todas las filas
+                if filas:
+                    for sentencia in filas:
+
+                        print(f"Nombre del Interno: {sentencia[0]}, Delito: {sentencia[1]}, Fecha Sentencia: {sentencia[2]}, Fecha Liberación: {sentencia[3]}, Duración: {sentencia[4]} años")
+                else:
+                    print(f"No se encontraron sentencias para la cárcel con ID {prison_id}.")
+        except Exception as e:
+            print(f"Error al consultar las sentencias: {e}")
+        
 
     def menu_sentencias(self, conexion):
         while True:
@@ -48,6 +70,7 @@ class SentenciaController:
             print("2. Actualizar Sentencia")
             print("3. Eliminar Sentencia")
             print("4. Listar Sentencias")
+            print("5. Consultar Sentencias por Cárcel")
             print("0. Volver al menú principal")
             
             opcion = input("Seleccione una opción: ")
@@ -60,6 +83,8 @@ class SentenciaController:
                 self.eliminar_sentencia(conexion)
             elif opcion == '4':
                 self.listar_sentencias(conexion)
+            elif opcion == '5':
+                self.consultar_sentencias_por_carcel(conexion)    
             elif opcion == '0':
                 break
             else:

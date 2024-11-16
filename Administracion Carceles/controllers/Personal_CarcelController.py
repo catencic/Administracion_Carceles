@@ -41,6 +41,30 @@ class Personal_CarcelController:
         personal = cursor.fetchall()
         for persona in personal:
             print(persona)
+            
+            
+    def consultar_personal_por_prision(self, conexion):
+        prision_id = input("Ingrese el ID de la cárcel: ")
+
+        try:
+            cursor = conexion.conexion.cursor()
+            # Llamar al procedimiento almacenado
+            cursor.callproc('GetStaffByPrison', [prision_id])
+
+            # Obtener y mostrar los resultados
+            print("\n--- Personal en la Cárcel ---")
+            for result in cursor.stored_results():  # Obtener los resultados del procedimiento
+                filas = result.fetchall()  # Obtener todas las filas
+                if filas:
+                    for persona in filas:
+
+                        print(f"ID Personal: {persona[0]}, Nombre Completo: {persona[1]}, Rol: {persona[2]}")
+                else:
+                    print(f"No se encontraron registros para la cárcel con ID {prision_id}.")
+        except Exception as e:
+            print(f"Error al consultar el personal: {e}")
+
+        
 
     def menu_personal(self, conexion):
         while True:
@@ -49,6 +73,7 @@ class Personal_CarcelController:
             print("2. Actualizar Personal")
             print("3. Eliminar Personal")
             print("4. Listar Personal")
+            print("5. Consultar Personal por Cárcel")
             print("0. Volver al menú principal")
             
             opcion = input("Seleccione una opción: ")
@@ -61,6 +86,8 @@ class Personal_CarcelController:
                 self.eliminar_personal(conexion)
             elif opcion == '4':
                 self.listar_personal(conexion)
+            elif opcion == '5':  
+                self.consultar_personal_por_prision(conexion)    
             elif opcion == '0':
                 break
             else:

@@ -44,7 +44,27 @@ class VisitasController:
             print(visita)
             
             
-        
+    def consultar_historial_visitas(self, conexion):
+        interno_id = input("Ingrese el ID del interno: ")
+
+        try:
+            cursor = conexion.conexion.cursor()
+            # Llamar al procedimiento almacenado
+            cursor.callproc('GetVisitsByInmate', [interno_id])
+
+            # Obtener y mostrar los resultados
+            print("\n--- Historial de Visitas ---")
+            for result in cursor.stored_results():  # Obtener los resultados del procedimiento
+                filas = result.fetchall()  # Obtener todas las filas
+                if filas:
+                    for visita in filas:
+
+                        print(f"ID Visitante: {visita[0]}, Nombre Visitante: {visita[1]}, Fecha de Visita: {visita[2]}")
+                else:
+                    print(f"No se encontraron visitas para el interno con ID {interno_id}.")
+        except Exception as e:
+            print(f"Error al consultar el historial de visitas: {e}")
+    
 
     def menu_visitas(self, conexion):
         while True:
@@ -53,6 +73,7 @@ class VisitasController:
             print("2. Actualizar Visita")
             print("3. Eliminar Visita")
             print("4. Listar Visitas")
+            print("5. Consultar Historial de Visitas por Interno")
             print("0. Volver al menú principal")
             
             opcion = input("Seleccione una opción: ")
@@ -64,7 +85,9 @@ class VisitasController:
             elif opcion == '3':
                 self.eliminar_visita(conexion)
             elif opcion == '4':
-                self.listar_visitas(conexion)    
+                self.listar_visitas(conexion)
+            elif opcion == '5':
+                self.consultar_historial_visitas(conexion)          
             elif opcion == '0':
                 break
             else:

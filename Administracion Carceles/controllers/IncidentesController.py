@@ -39,6 +39,28 @@ class IncidentesController:
         incidentes = cursor.fetchall()
         for incidente in incidentes:
             print(incidente)
+            
+    def consultar_incidentes_por_carcel(self, conexion):
+        prison_id = input("Ingrese el ID de la prisión: ")
+
+        try:
+            cursor = conexion.conexion.cursor()
+            # Llamar al procedimiento almacenado
+            cursor.callproc('GetIncidentsByPrison', [prison_id])
+
+            # Obtener y mostrar los resultados
+            print("\n--- Incidentes de la Prisión ---")
+            for result in cursor.stored_results():  # Obtener los resultados del procedimiento
+                incidentes = result.fetchall()  # Obtener todas las filas
+                if incidentes:
+                    for incidente in incidentes:
+                        # Los índices corresponden a las columnas devueltas por el procedimiento
+                        print(f"ID: {incidente[0]}, Descripción: {incidente[1]}, Fecha: {incidente[2]}")
+                else:
+                    print(f"No se encontraron incidentes para la prisión con ID {prison_id}.")
+        except Exception as e:
+            print(f"Error al consultar los incidentes: {e}")
+        
 
     def menu_incidentes(self, conexion):
         while True:
@@ -47,6 +69,7 @@ class IncidentesController:
             print("2. Actualizar Incidente")
             print("3. Eliminar Incidente")
             print("4. Listar Incidentes")
+            print("5. Consultar Incidentes por Prisión")
             print("0. Volver al menú principal")
             
             opcion = input("Seleccione una opción: ")
@@ -59,6 +82,8 @@ class IncidentesController:
                 self.eliminar_incidente(conexion)
             elif opcion == '4':
                 self.listar_incidentes(conexion)
+            elif opcion == '5':
+                self.consultar_incidentes_por_carcel(conexion)    
             elif opcion == '0':
                 break
             else:
