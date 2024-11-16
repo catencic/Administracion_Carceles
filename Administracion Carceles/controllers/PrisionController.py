@@ -45,7 +45,9 @@ class PrisionController:
                 print(f"ID: {row[0]}, Nombre: {row[1]}, Dirección: {row[2]}, Municipio ID: {row[3]}")
         else:
             print("No hay cárceles registradas.")
-
+    
+    
+    
     def menu_prision(self, conexion):
         while True:
             print("\n--- Menú Cárceles ---")
@@ -64,7 +66,7 @@ class PrisionController:
             elif opcion == '3':
                 self.eliminar_prison(conexion)
             elif opcion == '4':
-                self.listar_prisons(conexion)
+                self.listar_prisiones_por_municipio(conexion)    
             elif opcion == '0':
                 break
             else:

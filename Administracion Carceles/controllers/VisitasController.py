@@ -42,6 +42,9 @@ class VisitasController:
         visitas = cursor.fetchall()
         for visita in visitas:
             print(visita)
+            
+            
+        
 
     def menu_visitas(self, conexion):
         while True:
@@ -61,7 +64,7 @@ class VisitasController:
             elif opcion == '3':
                 self.eliminar_visita(conexion)
             elif opcion == '4':
-                self.listar_visitas(conexion)
+                self.listar_visitas(conexion)    
             elif opcion == '0':
                 break
             else:

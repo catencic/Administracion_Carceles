@@ -41,6 +41,8 @@ class InternoController:
         internos = cursor.fetchall()
         for interno in internos:
             print(interno)
+            
+        
 
     def menu_interno(self, conexion):
         while True:
@@ -60,7 +62,7 @@ class InternoController:
             elif opcion == '3':
                 self.eliminar_interno(conexion)
             elif opcion == '4':
-                self.listar_internos(conexion)
+                self.listar_internos(conexion)  
             elif opcion == '0':
                 break
             else:

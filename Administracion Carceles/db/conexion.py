@@ -9,7 +9,7 @@ class Conexion:
             self.conexion = mysql.connector.connect(
                 host="localhost",
                 database="administracion_carceles",
-                user="admin_carcel",
+                user="admin_carcel1",
                 password="Clas3s1Nt2024_!",
                 port=3306
             )
